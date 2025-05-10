@@ -9,9 +9,9 @@ import { Observable } from 'rxjs';
   standalone: false
 })
 export class ListPage {
-  items$: Observable<any[]>;
+  //items$: Observable<any[]>;
 
   constructor(private firebase: FirebaseService) {
-    this.items$ = this.firebase.getEntries();
+    //this.items$ = this.firebase.getEntries();
   }
 }

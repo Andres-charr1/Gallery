@@ -1,23 +1,27 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, collection, addDoc, CollectionReference, DocumentData } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
-  constructor(private firestore: AngularFirestore) {}
+  private multimediaCollection: CollectionReference<DocumentData>;
 
-  addEntry(description: string, imageUrl: string) {
+  constructor(private firestore: Firestore) {
+    this.multimediaCollection = collection(this.firestore, 'multimedia');
+  }
+
+  async addEntry(description: string, imageUrl: string): Promise<void> {
     const data = {
       description,
       imageUrl,
       createdAt: new Date().toISOString()
     };
-    return this.firestore.collection('multimedia').add(data);
-  }
 
-  getEntries(): Observable<any[]> {
-    return this.firestore
-      .collection('multimedia', ref => ref.orderBy('createdAt', 'desc'))
-      .valueChanges({ idField: 'id' });
+    try {
+      const docRef = await addDoc(this.multimediaCollection, data);
+      console.log('Documento agregado con ID:', docRef.id);
+    } catch (error) {
+      console.error('Error al agregar documento:', error);
+      throw error;
+    }
   }
 }
