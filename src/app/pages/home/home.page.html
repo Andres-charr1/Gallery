@@ -1,26 +1,64 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Registrar Multimedia</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Galería Multimedia</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="image-container">
+      <div class="image-preview" *ngIf="previewImage">
+        <img [src]="previewImage" alt="Vista previa" />
+      </div>
+      <div
+        class="image-placeholder"
+        *ngIf="!previewImage"
+        (click)="pickImage()"
+      >
+        <ion-icon name="camera"></ion-icon>
+        <p>Toca para tomar una foto</p>
+      </div>
+    </div>
+
     <ion-item>
-      <ion-label position="stacked">Descripción</ion-label>
-      <ion-input formControlName="description" placeholder="Escribe algo..."></ion-input>
+      <ion-label position="floating">Descripción</ion-label>
+      <ion-textarea formControlName="description" rows="4"></ion-textarea>
     </ion-item>
-    <ion-note color="danger" *ngIf="form.get('description')?.touched && form.get('description')?.invalid">
-      La descripción es requerida.
-    </ion-note>
+    <div
+      class="error-message"
+      *ngIf="form.get('description')?.hasError('required') && form.get('description')?.touched"
+    >
+      La descripción es obligatoria
+    </div>
 
-    <ion-button expand="block" (click)="pickImage()">Seleccionar de la Galeria</ion-button>
+    <div class="button-container">
+      <ion-button expand="full" (click)="pickImage()" color="secondary">
+        <ion-icon name="camera" slot="start"></ion-icon>
+        Cambiar imagen
+      </ion-button>
 
-    <ion-img [src]="previewImage" *ngIf="previewImage" class="preview-img"></ion-img>
-    <ion-note color="danger" *ngIf="form.get('image')?.invalid && form.touched">
-      Debes capturar o seleccionar una imagen.
-    </ion-note>
+      <ion-button
+        expand="full"
+        type="submit"
+        [disabled]="form.invalid || !imageBlob"
+      >
+        <ion-icon name="save" slot="start"></ion-icon>
+        Guardar
+      </ion-button>
 
-    <ion-button expand="block" type="submit" [disabled]="form.invalid">Guardar</ion-button>
+      <ion-button
+        expand="full"
+        fill="outline"
+        routerLink="/list"
+        color="medium"
+      >
+        <ion-icon name="images" slot="start"></ion-icon>
+        Ver galería
+      </ion-button>
+      <ion-button expand="full" fill="outline" (click)="test()" color="medium">
+        <ion-icon name="images" slot="start"></ion-icon>
+        Test
+      </ion-button>
+    </div>
   </form>
 </ion-content>
